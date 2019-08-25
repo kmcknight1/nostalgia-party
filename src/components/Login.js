@@ -1,28 +1,44 @@
 import React, { useState } from "react";
+import axios from "axios";
 import loginKey from "../img/login-key.png";
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  TextField,
-  List,
-  ListItem,
-  Divider,
-  Window,
-  WindowHeader,
-  WindowContent
-} from "react95";
+import { Button, TextField, Window, WindowHeader } from "react95";
 
 const Login = props => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  function loginUser(body) {
+    axios
+      .post("https://nostalgia-party.herokuapp.com/api/auth/login", body)
+      .then(res => {
+        console.log(res.data);
+        localStorage.setItem("token", res.data.token);
+        props.history.push("/home");
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+  }
+
   return (
-    <div style={{ backgroundColor: "#208c71", height: "100vh" }}>
+    <form
+      style={{
+        backgroundColor: "#208c71",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+      onSubmit={e => {
+        e.preventDefault();
+        const body = { username, password };
+        loginUser(body);
+      }}
+    >
       <Window
         style={{
-          top: "30%",
-          left: "1%",
-          height: "15rem",
-          width: "42rem",
-          border: "1px solid yellow"
+          height: "13rem",
+          width: "42rem"
         }}
       >
         <WindowHeader
@@ -39,8 +55,7 @@ const Login = props => {
           style={{
             display: "flex",
             justifyContent: "space-around",
-            height: "80%",
-            border: "1px solid red"
+            height: "80%"
           }}
         >
           <img
@@ -55,8 +70,7 @@ const Login = props => {
             className="login-window-text"
             style={{
               display: "flex",
-              flexDirection: "column",
-              border: "1px solid red"
+              flexDirection: "column"
             }}
           >
             <span style={{ padding: "1rem 0" }}>
@@ -72,7 +86,11 @@ const Login = props => {
               }}
             >
               <span>Username: </span>
-              <TextField />
+              <TextField
+                type="text"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+              />
             </div>
             <div
               style={{
@@ -83,7 +101,11 @@ const Login = props => {
               }}
             >
               <span>Password: </span>
-              <TextField />
+              <TextField
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
             </div>
           </div>
           <div
@@ -91,16 +113,19 @@ const Login = props => {
             style={{
               display: "flex",
               flexDirection: "column",
-              border: "1px solid yellow",
               width: "20%"
             }}
           >
-            <Button>Ok</Button>
-            <Button>Cancel</Button>
+            <Button type="submit" style={{ marginTop: "1rem" }}>
+              Ok
+            </Button>
+            <Button type="reset" style={{ marginTop: "0.5rem" }}>
+              Cancel
+            </Button>
           </div>
         </div>
       </Window>
-    </div>
+    </form>
   );
 };
 

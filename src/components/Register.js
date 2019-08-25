@@ -7,14 +7,31 @@ const Register = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  function registerUser(body) {
+    axios
+      .post("https://nostalgia-party.herokuapp.com/api/auth/register", body)
+      .then(res => {
+        console.log(res.data);
+        props.history.push("/login");
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+  }
+
   return (
-    <div
+    <form
       style={{
         backgroundColor: "#208c71",
         height: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
+      }}
+      onSubmit={e => {
+        e.preventDefault();
+        const body = { username, password };
+        registerUser(body);
       }}
     >
       <Window
@@ -70,7 +87,11 @@ const Register = props => {
               }}
             >
               <span>Username: </span>
-              <TextField />
+              <TextField
+                type="text"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+              />
             </div>
             <div
               style={{
@@ -81,7 +102,11 @@ const Register = props => {
               }}
             >
               <span>Password: </span>
-              <TextField />
+              <TextField
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
             </div>
           </div>
           <div
@@ -92,11 +117,13 @@ const Register = props => {
               width: "20%"
             }}
           >
-            <Button style={{ marginTop: "1.5rem" }}>Go!</Button>
+            <Button type="submit" style={{ marginTop: "1.5rem" }}>
+              Go!
+            </Button>
           </div>
         </div>
       </Window>
-    </div>
+    </form>
   );
 };
 

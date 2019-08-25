@@ -7,6 +7,7 @@ import { reset, themes } from "react95";
 import Navigation from "./components/Navigation";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import Home from "./components/Home";
 
 const ResetStyles = createGlobalStyle`
   ${reset}
@@ -29,6 +30,12 @@ const App = () => {
             path="/login"
             render={props => {
               return <Login {...props} />;
+            }}
+          />
+          <Route
+            path="/home"
+            render={props => {
+              return <Home {...props} />;
             }}
           />
         </div>
